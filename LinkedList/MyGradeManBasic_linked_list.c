@@ -17,25 +17,9 @@ void Run();
 
 int main(void)
 {
-    Initialize(); 
     Run();
  
     return 0;
-}
- 
- 
-void Initialize()
-{
-    int i = 0;
-    int s = 0;
- 
-    for (i = 0; i<MAX_STUDENT; i++)
-    {
-        for (s = 0; s<MAX_SUBJECT; s++)
-        {
-            stues[i].scores[s] = -1;  // Grade -1
-        }
-    }
 }
 
 void Run()
@@ -46,13 +30,14 @@ void Run()
     {
         switch (key)			// Select key
         {
-        case 1: AddStudent(); break;
-        case 2: RemoveStudent(); break; //Done
-        case 3: FindStudent(); break; //Done
-        case 4: printList(L); break; //Done
+        case 1: AddStudent(L); break;
+        case 2: RemoveStudent(L); break;
+        case 3: FindStudent(L); break;
+        case 4: printList(L); break;
         default: printf("Wrong selected.\n"); break;
         }
     }
+    freeStudent_h(L);
     printf("Program exit\n");
 }
  
@@ -66,50 +51,51 @@ int SelectMenu()
     return key;
 }
 
-void AddStudent()
+void AddStudent(Student_h* L)
 {
     int num = 0;
-    Student *stu = 0;
-    int s = 0;
- 
-    printf("ID number to add (1~%d): ", MAX_STUDENT);
+    char name[MAX_NLEN + 1];
+    int scores[MAX_SUBJECT];
+    int s;
+
+    printf("ID number to add: ");
     scanf("%d", &num);
  
-    if (IsAvailNum(num) == 0)		// ID invalid
+    if (IsAvailNum(L, num) == 0)		// ID invalid
     {
         printf("Invalid ID number.\n");
         return;
     }
- 
-    if (stues[num - 1].num)		// Already ID added
-    {
-        printf("Already added\n");
-        return;
-    }
- 
-    // stues : Memory address student ID 1 
-    // stues+(num-1) : Memory address ID num 
-    stu = stues + (num - 1);			// Actual stu address = stues address + (size of node) x (num-1)
-    stu->num = num;
+
     printf("Name: ");
-    scanf("%s", stu->name);
+    scanf("%s", name);
  
     for (s = 0; s<MAX_SUBJECT; s++)		// s: subject index
     {
         printf("%s Score:", stitles[s]);
-        scanf("%d", stu->scores + s); 		// same as &stu->scores[s]
+        scanf("%d", &scores[s]); 		// same as &stu->scores[s]
  
-        if (IsAvailScore(stu->scores[s]) == 0)	// Invalid score 
+        if (IsAvailScore(scores[s]) == 0)	// Invalid score 
         {
-            stu->scores[s] = -1;
+            scores[s] = -1;
             printf("Invalid score. %s score is not added.\n", stitles[s]);
         }
     }
+
+    insertLastNode(L, name, num, scores);
+    printf("Student added successfully.\n");
 }
 
-int IsAvailNum(int num)
+int IsAvailNum(Student_h* L,int num)
 {
-    return (num >= 1) && (num <= MAX_STUDENT);
+        if (num <= 0) {
+        return 0;
+    }
+    if (searchNode(L, num) != NULL) {
+        printf("ID already exists.\n");
+        return 0;
+    }
+    return 1;
 }
 
 int IsAvailScore(int score)
@@ -117,92 +103,42 @@ int IsAvailScore(int score)
     return (score >= 0) && (score <= 100);
 }
 
-void RemoveStudent()
+void RemoveStudent(Student_h* L)
 {
-    Student_h* L=CreateStudent_h();
-    int num = 0;
-    Student *stu = 0;
-    int s = 0;
- 
-    printf("ID number to remove(1~%d): ", MAX_STUDENT);
+    int num;
+    printf("ID number to remove");
     scanf("%d", &num);
- 
-    if (IsAvailNum(num) == 0)		//Invalid ID num
-    {
-        printf("Invalid ID.\n");
+
+    if (searchNode(L,num)==NULL){
+        printf("Student does not exitst.\n");
         return;
     }
- 
-    if (stues[num - 1].num == 0)	// ID not set
-    {
-        printf("No data.\n");
-        return;
-    }
- 
-    stu = stues + (num - 1);
-    deleteNode(L,stu);
+
+    deleteNode(L,num);
     printf("Removed.\n");
 }
 
 void ViewStuData(Student *stu);
 
-void FindStudent()
+void FindStudent(Student_h* L)
 {
     int num = 0;
-    Student *stu = 0;
-    Student_h* L=CreateStudent_h();
-    int s = 0;
  
-    printf("ID number to find(1~%d): ", MAX_STUDENT);
+    printf("ID number to find: ");
     scanf("%d", &num);
- 
-    if (IsAvailNum(num) == 0)		//Invalid ID num
+
+
+    Student *stu = searchNode(L,num);
+    if (stu == NULL)
     {
-        printf("Invalid ID.\n");
+        printf("Student does not exist.\n");
         return;
     }
  
-    if (stues[num - 1].num == 0)	//ID not set
+    printf("ID: %d, Name: %s\n", stu->num, stu->name);
+    for (int i = 0; i<MAX_SUBJECT; i++)
     {
-        printf("No data.\n");
-        return;
-    }
- 
-    stu = stues + (num - 1);
-    searchNode(L,stu);
-}
-
-void ViewStuData(Student *stu)
-{
-    int i = 0;
-    int s = 0;
- 
-    printf("%7d %7s ", stu->num, stu->name);
-    for (s = 0; s<MAX_SUBJECT; s++)
-    {
-        printf("%7d ", stu->scores[s]);
-    }
-    printf("\n");
-}
-
-void ListStudent()
-{
-    int i = 0;
-    int s = 0;
- 
-    printf("%7s %7s ", "ID", "Name");
-    for (s = 0; s<MAX_SUBJECT; s++)
-    {
-        printf("%7s ", stitles[s]);
-    }
-    printf("(Score -1 : no info)\n");
- 
-    for (i = 0; i<MAX_STUDENT; i++)
-    {
-        if (stues[i].num)
-        {
-            ViewStuData(stues + i);
-        }
+        printf("%s: %d\n", stitles[i], stu->scores[i]);
     }
 }
 
@@ -236,6 +172,8 @@ void printList(Student_h* L)
     }
 }
 
+/* The following functions are not used in this program
+
 void insertFirstNode(Student_h* L, char* name, int num, int* scores)
 {
     Student* newnode;
@@ -261,6 +199,7 @@ void insertMiddleNode(Student_h* L, Student* pre, char* name, int num, int* scor
     newnode->link = pre->link;
     pre->link = newnode;
 }
+*/
 
 void insertLastNode(Student_h* L, char* name, int num, int* scores)
 {
@@ -286,12 +225,24 @@ void insertLastNode(Student_h* L, char* name, int num, int* scores)
     p->link = newnode;
 }
 
-void deleteNode(Student_h* L, Student* pre)
+void deleteNode(Student_h* L, int num)
 {
-    Student* removed;
-    removed = pre->link;
-    pre->link = removed->link;
-    free(removed);
+    Student* current = L->head;
+    Student* pre = NULL;
+
+    while (current !=NULL){
+        if (current->num == num){
+            if (pre == NULL){
+                L->head = current->link;
+        }else{
+            pre->link = current->link;
+        }
+        free(current);
+        return;
+    }
+    pre=current;
+    current=current->link;
+    }
 }
 
 Student* searchNode(Student_h* L, int num)
