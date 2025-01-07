@@ -17,7 +17,6 @@ void Run();
 
 int main(void)
 {
- 
     Initialize(); 
     Run();
  
@@ -38,24 +37,19 @@ void Initialize()
         }
     }
 }
- 
-int SelectMenu();	// Menu print and select
-void AddStudent();	// Add student data 
-void RemoveStudent();	// Remove student data 
-void FindStudent();	// Search student
-void ListStudent();	// Show list student
 
 void Run()
 {
     int key = 0;
+    Student_h* L=CreateStudent_h();
     while ((key = SelectMenu()) != 0)	// Repear if menu is not 0 
     {
         switch (key)			// Select key
         {
         case 1: AddStudent(); break;
-        case 2: RemoveStudent(); break;
-        case 3: FindStudent(); break;
-        case 4: ListStudent(); break;
+        case 2: RemoveStudent(); break; //Done
+        case 3: FindStudent(); break; //Done
+        case 4: printList(L); break; //Done
         default: printf("Wrong selected.\n"); break;
         }
     }
@@ -71,9 +65,6 @@ int SelectMenu()
     scanf("%d", &key);
     return key;
 }
- 
-int IsAvailNum(int num);	// Check valid ID number
-int IsAvailScore(int score);	// Check valid score
 
 void AddStudent()
 {
@@ -128,6 +119,7 @@ int IsAvailScore(int score)
 
 void RemoveStudent()
 {
+    Student_h* L=CreateStudent_h();
     int num = 0;
     Student *stu = 0;
     int s = 0;
@@ -148,14 +140,7 @@ void RemoveStudent()
     }
  
     stu = stues + (num - 1);
-    strcpy(stu->name, "");
-    stu->num = 0;
-
-    for (s = 0; s<MAX_SUBJECT; s++)
-    {
-        stu->scores[s] = -1;
-    }
- 
+    deleteNode(L,stu);
     printf("Removed.\n");
 }
 
@@ -165,6 +150,7 @@ void FindStudent()
 {
     int num = 0;
     Student *stu = 0;
+    Student_h* L=CreateStudent_h();
     int s = 0;
  
     printf("ID number to find(1~%d): ", MAX_STUDENT);
@@ -183,7 +169,7 @@ void FindStudent()
     }
  
     stu = stues + (num - 1);
-    ViewStuData(stu);
+    searchNode(L,stu);
 }
 
 void ViewStuData(Student *stu)
@@ -319,21 +305,4 @@ Student* searchNode(Student_h* L, int num)
         }
     }
     return NULL;
-}
-
-void reverseList(Student_h* L)
-{
-    Student* p;
-    Student* q;
-    Student* r;
-    p = L->head;
-    q = NULL;
-    while (p != NULL)
-    {
-        r = q;
-        q = p;
-        p = p->link;
-        q->link = r;
-    }
-    L->head = q;
 }

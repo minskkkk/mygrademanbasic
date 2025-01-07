@@ -1,3 +1,6 @@
+// Grade management system Header file
+// Written by Minseok Song (2025.01.07)
+
 #define MAX_NLEN    20		// Name length
 #define MAX_SUBJECT 3		// Number of subjects
 #define MAX_STUDENT 10		// Max number of students
@@ -29,4 +32,11 @@ void insertMiddleNode(Student_h* L, Student* pre, char* name, int num, int* scor
 void insertLastNode(Student_h* L, char* name, int num, int* scores);
 void deleteNode(Student_h* L, Student* pre);
 Student* searchNode(Student_h*L, int num);
-void reverseList(Student_h* L);
+
+int SelectMenu();	// Menu print and select
+void AddStudent();	// Add student data 
+void RemoveStudent();	// Remove student data 
+void FindStudent();	// Search student
+void ListStudent();	// Show list student
+int IsAvailNum(int num);	// Check valid ID number
+int IsAvailScore(int score);	// Check valid score
