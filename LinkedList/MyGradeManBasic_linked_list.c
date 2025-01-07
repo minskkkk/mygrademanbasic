@@ -9,7 +9,7 @@
 #include <memory.h>
 #include <stdlib.h>
 #include <string.h>
-#include "MyGradeManBasic_liked_list.h"
+#include "MyGradeManBasic_linked_list.h"
 
 int main(void)
 {

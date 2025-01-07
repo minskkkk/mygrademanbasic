@@ -9,7 +9,7 @@
 const char *stitles[MAX_SUBJECT] = { "Korean","English","Math" };
 
 //define the structure of the student node
-typedef struct {
+typedef struct Student {
     char name[MAX_NLEN + 1];
     int num;
     int scores[MAX_SUBJECT];
@@ -23,7 +23,7 @@ typedef struct {
 
 //function declaration
 Student_h* CreateStudent_h(void);
-void freeStudnet_h(Student_h* L);
+void freeStudent_h(Student_h* L);
 void printList(Student_h* L);
 void insertLastNode(Student_h* L, char* name, int num, int* scores);
 void deleteNode(Student_h* L, int num);
