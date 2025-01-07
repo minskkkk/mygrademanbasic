@@ -1,19 +1,15 @@
 // Grade management system
-// ID indicates array index (1,2,..,MAX_STUDENT-1)
-// Global variable : Structure array
-// Max number of students are fixed
-// 
+//
 // Editted by Minseok Song (2025.01.07)
 // Add the Linked List functions
+//
+// Last modified by Minseok Song (2025.01.07 18:49)
 
 #include <stdio.h>
 #include <memory.h>
 #include <stdlib.h>
 #include <string.h>
 #include "MyGradeManBasic_liked_list.h"
- 
-void Initialize();		// Initialize student data
-void Run();
 
 int main(void)
 {
@@ -115,10 +111,7 @@ void RemoveStudent(Student_h* L)
     }
 
     deleteNode(L,num);
-    printf("Removed.\n");
 }
-
-void ViewStuData(Student *stu);
 
 void FindStudent(Student_h* L)
 {
@@ -134,7 +127,7 @@ void FindStudent(Student_h* L)
         printf("Student does not exist.\n");
         return;
     }
- 
+
     printf("ID: %d, Name: %s\n", stu->num, stu->name);
     for (int i = 0; i<MAX_SUBJECT; i++)
     {
@@ -160,6 +153,7 @@ void freeStudent_h(Student_h* L)
         free(p);
         p=NULL;
     }
+    free(L);
 }
 
 void printList(Student_h* L)
@@ -171,35 +165,6 @@ void printList(Student_h* L)
         printf("%d %s %d %d %d\n", p->num, p->name, p->scores[0], p->scores[1], p->scores[2]);
     }
 }
-
-/* The following functions are not used in this program
-
-void insertFirstNode(Student_h* L, char* name, int num, int* scores)
-{
-    Student* newnode;
-    newnode = (Student*)malloc(sizeof(Student));
-    strcpy(newnode->name, name);
-    newnode->num = num;
-    newnode->scores[0] = scores[0];
-    newnode->scores[1] = scores[1];
-    newnode->scores[2] = scores[2];
-    newnode->link = L->head;
-    L->head = newnode;
-}
-
-void insertMiddleNode(Student_h* L, Student* pre, char* name, int num, int* scores)
-{
-    Student* newnode;
-    newnode = (Student*)malloc(sizeof(Student));
-    strcpy(newnode->name, name);
-    newnode->num = num;
-    newnode->scores[0] = scores[0];
-    newnode->scores[1] = scores[1];
-    newnode->scores[2] = scores[2];
-    newnode->link = pre->link;
-    pre->link = newnode;
-}
-*/
 
 void insertLastNode(Student_h* L, char* name, int num, int* scores)
 {
@@ -243,6 +208,7 @@ void deleteNode(Student_h* L, int num)
     pre=current;
     current=current->link;
     }
+    printf("Removed.\n");
 }
 
 Student* searchNode(Student_h* L, int num)
@@ -257,3 +223,32 @@ Student* searchNode(Student_h* L, int num)
     }
     return NULL;
 }
+
+/* The following functions are not used in this program
+
+void insertFirstNode(Student_h* L, char* name, int num, int* scores)
+{
+    Student* newnode;
+    newnode = (Student*)malloc(sizeof(Student));
+    strcpy(newnode->name, name);
+    newnode->num = num;
+    newnode->scores[0] = scores[0];
+    newnode->scores[1] = scores[1];
+    newnode->scores[2] = scores[2];
+    newnode->link = L->head;
+    L->head = newnode;
+}
+
+void insertMiddleNode(Student_h* L, Student* pre, char* name, int num, int* scores)
+{
+    Student* newnode;
+    newnode = (Student*)malloc(sizeof(Student));
+    strcpy(newnode->name, name);
+    newnode->num = num;
+    newnode->scores[0] = scores[0];
+    newnode->scores[1] = scores[1];
+    newnode->scores[2] = scores[2];
+    newnode->link = pre->link;
+    pre->link = newnode;
+}
+*/
