@@ -1,6 +1,6 @@
 // Grade management system Header file
-// Written by Minseok Song (2025.01.07 18:48)
 //
+// Written by Minseok Song (2025.01.07 15:19)
 // Last modified by Minseok Song (2025.01.07 18:49)
 
 #define MAX_NLEN    20		// Name length
